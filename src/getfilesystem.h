@@ -1,13 +1,12 @@
 /*
  * =====================================================================================
  *
- *       Filename:  du.h
+ *       Filename:  getfilesystem.h
  *
- *    Description:  the main algorithm for reading the dirs and writing the output to 
- *    		    a file for later usage by the other functions
+ *    Description:  get filesystem
  *
  *        Version:  1.0
- *        Created:  27.04.2018 18:43:44
+ *        Created:  27.04.2018 21:20:36
  *       Revision:  none
  *       Compiler:  gcc
  *
@@ -16,8 +15,7 @@
  *
  * =====================================================================================
  */
+#ifndef GETFILESYSTEM_H
+	#define GETFILESYSTEM_H
 
-#ifndef DU_H
-	#define DU_H
-	extern char 	
 #endif
