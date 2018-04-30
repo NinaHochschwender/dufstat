@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "help.h"
+//a function for showing the help
 void help(){
     printf("%8s%s\n","Usage:","du [OPTION]... [FILE]...");
     printf("%8s%s\n","or:","du [OPTION]... --files0-from=F");

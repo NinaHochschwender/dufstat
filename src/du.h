@@ -19,5 +19,6 @@
 
 #ifndef DU_H
 	#define DU_H
-	extern char 	
+	void readdirs(FILE *file, char * dir, short showHidden, short followSymlink);//function to be called. never call this in other then du.c
+	void filesreturn(char * directory, short showHidden, short followSymlink);//caller function
 #endif
