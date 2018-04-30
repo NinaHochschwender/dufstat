@@ -1,12 +1,12 @@
 /*
  * =====================================================================================
  *
- *       Filename:  du_s.c
+ *       Filename:  main.c
  *
- *    Description:  the sources for summarizing du
+ *    Description:  main
  *
  *        Version:  1.0
- *        Created:  27.04.2018 18:27:00
+ *        Created:  27.04.2018 21:24:41
  *       Revision:  none
  *       Compiler:  gcc
  *
@@ -15,15 +15,18 @@
  *
  * =====================================================================================
  */
-#include "du_s.h"
+#include <stdlib.h>
+//#include "du.h"
+//#include "du_s.h"
 #include <stdio.h>
-#include <sys/types.h>
-#include <dirent.h>
+#include <string.h>
+#include "help.h"
 
-long sumoffiles(long * size){
-    long sizes;
-    for(int i = 0; i < (sizeof(size)/sizeof(long)); i++){
-        sizes += size[i];
+int main(int argc, char **argv){
+    for(int i = 0; i < argc; i++){
+        if (strcmp(argv[i],"--help") == 0){
+            help();
+            return 0;
+        }
     }
-    return sizes;
 }
