@@ -1,28 +1,24 @@
 /*
  * =====================================================================================
  *
- *       Filename:  du_s.c
+ *       Filename:  du.c
  *
- *    Description:  the sources for summarizing du
+ *    Description:  the main algorithm for reading the dirs and writing the output to 
+ *                  a file for later usage by the other functions
  *
  *        Version:  1.0
- *        Created:  27.04.2018 18:27:00
+ *        Created:  27.04.2018 21:15:55
  *       Revision:  none
  *       Compiler:  gcc
  *
- *         Author:  Nils Hochschwender
+ *         Author:  Nils Hochschwender 
  *   Organization:  None
  *
  * =====================================================================================
  */
-#include "du_s.h"
+#include <stdlib.h>
 #include <stdio.h>
-#include <sys/types.h>
 #include <dirent.h>
+#include "du.h"
 
-long sumoffiles(long * size){
-    long sizes;
-    for(int i = 0; i < (sizeof(size)/sizeof(long)); i++){
-        sizes += size[i];
-    }
-}
+void readDir(*

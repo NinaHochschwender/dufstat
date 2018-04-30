@@ -1,12 +1,12 @@
 /*
  * =====================================================================================
  *
- *       Filename:  du_s.c
+ *       Filename:  getfilesystem.c
  *
- *    Description:  the sources for summarizing du
+ *    Description:  get filesystem
  *
  *        Version:  1.0
- *        Created:  27.04.2018 18:27:00
+ *        Created:  27.04.2018 21:24:41
  *       Revision:  none
  *       Compiler:  gcc
  *
@@ -15,14 +15,5 @@
  *
  * =====================================================================================
  */
-#include "du_s.h"
-#include <stdio.h>
-#include <sys/types.h>
-#include <dirent.h>
-
-long sumoffiles(long * size){
-    long sizes;
-    for(int i = 0; i < (sizeof(size)/sizeof(long)); i++){
-        sizes += size[i];
-    }
-}
+#include <stdlib.h>
+#include "getfilesystem.h"
