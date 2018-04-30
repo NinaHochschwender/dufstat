@@ -15,9 +15,14 @@
  *
  * =====================================================================================
  */
-#include "dus.h"
+#include "du_s.h"
 #include <stdio.h>
 #include <sys/types.h>
 #include <dirent.h>
 
-
+long sumoffiles(long * size){
+    long sizes;
+    for(int i = 0; i < (sizeof(size)/sizeof(long)); i++){
+        sizes += size[i];
+    }
+}
