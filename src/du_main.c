@@ -16,7 +16,7 @@
  * =====================================================================================
  */
 #include <stdlib.h>
-#include "du.h"
+//#include "du.h"
 //#include "du_s.h"
 #include <stdio.h>
 #include <string.h>
@@ -29,5 +29,5 @@ int main(int argc, char **argv){
             return 0;
         }
     }
-    for
+//    for
 }
