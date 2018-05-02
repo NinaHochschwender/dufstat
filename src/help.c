@@ -2,6 +2,7 @@
 #include "help.h"
 //a function for showing the help
 void help(){
+	//test
     printf("%8s%s\n","Usage:","du [OPTION]... [FILE]...");
     printf("%8s%s\n","or:","du [OPTION]... --files0-from=F");
     puts("Summarize disk usage of the set of FILEs, recursively for directories.");
