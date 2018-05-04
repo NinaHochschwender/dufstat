@@ -1,8 +1,5 @@
 #include <stdio.h>
 #include "help.h"
-#define ARGS "%7s%-20s%s\n"
-#define HEAD "%8s%s\n"
-#define TEXT "%27s%s\n"
 
 //a function for showing the help
 void help(){
@@ -10,6 +7,7 @@ void help(){
     printf(HEAD,"Usage:","du [OPTION]... [FILE]...");
     printf(HEAD,"or:","du [OPTION]... --files0-from=F");
     puts("Summarize disk usage of the set of FILEs, recursively for directories.");
+    puts("");
     puts("Mandatory arguments to long options are mandatory for short options too.");
     printf(ARGS,"-0,","--null","end each output line with NUL, not newline");
     printf(ARGS,"-a,","--all","write counts for all files, not just directories");
