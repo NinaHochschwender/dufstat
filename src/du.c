@@ -20,6 +20,9 @@
 #include <stdio.h>
 #include <dirent.h>
 #include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <fcntl.h>
 #include <string.h>
 #include "du.h"
 
@@ -28,30 +31,52 @@ void readdirs(FILE *file, char * dir, short showHidden, short followSymlink){
     DIR *dp;
     struct dirent *ep;
     dp = opendir(dir);
+	int fileTest = 0;
+	struct stat filestat;
     char *fulldir = malloc(10000 * sizeof(char));
     if (dp != NULL){
         while (ep = readdir(dp)){
-            if (ep->d_type == DT_DIR && strcmp(ep->d_name,"..") == 0 && strcmp(ep->d_name,".") == 0){
-                if (ep->d_name[0] == "." && showHidden == 1){
-                    sprintf(fulldir,"%s/%s",dir,ep->d_name);
-                    readdirs(file, fulldir,showHidden, followSymlink);
-                } else {
-                    sprintf(fulldir,"%s/%s",dir,ep->d_name);
-                    readdirs(file, fulldir,showHidden, followSymlink);
-                }
-            } else if (ep->d_type == DT_REG){
-                if (ep->d_name[0] == "." && showHidden == 1){
-                    sprintf(fulldir,"%s/%s",dir,ep->d_name);
-                    fprintf(file,"%s\n",fulldir);
-                } else {
-                    sprintf(fulldir,"%s/%s",dir,ep->d_name);
-                    fprintf(file,"%s\n",fulldir);
-                }
-            }
-        }
-        (void)closedir(dp);//close the directory
-    }
+			sprintf( fulldir, "%s/%s", dir, ep->d_name );
+            fileTest = 0;
+			if (( fileTest = open (fulldir, O_RDONLY)) >= -1){
+				if ( fstat ( fileTest, &filestat) >= 0){	
+					if (S_ISDIR( filestat.st_mode)){
+						if(strcmp(ep->d_name,"..") == 0){
+							
+						} else if((strcmp(ep->d_name,".") == 0 && strlen(ep->d_name) == 1)){
 
+						}else{
+                		/*
+						if (strstr(ep->d_name, ".") == 0){
+							if(showHidden == 1){
+                    			readdirs(file, fulldir, showHidden, followSymlink);
+							}
+            	    	} else {
+            	        	readdirs(file, fulldir, showHidden, followSymlink);
+            	    	}
+						*/
+						readdirs(file, fulldir, showHidden, followSymlink);
+						printf("%s\n", ep->d_name);
+
+						 }
+            		} else if ( S_ISREG( filestat.st_mode )){
+						/*
+            	    	if (strstr(ep->d_name, ".") == 0){
+							if (showHidden == 1){
+            	    			fprintf(file,"%s;%li\n",fulldir,filestat.st_size);
+							}
+            	    	} else {
+            	            fprintf(file,"%s;%li\n",fulldir,filestat.st_size);
+            	    	}
+						*/
+						fprintf(file, "%s;%li\n", fulldir, filestat.st_size);
+						printf("%s;%li\n", fulldir,filestat.st_size);
+            		}
+				}
+        	}
+		}
+        (void)closedir(dp);//close the directory
+	}
 }
 
 void filesreturn(char * directory, short showHidden, short followSymlink){

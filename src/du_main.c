@@ -16,18 +16,25 @@
  * =====================================================================================
  */
 #include <stdlib.h>
-//#include "du.h"
-//#include "du_s.h"
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
+#include <errno.h>
 #include "help.h"
+#include "du.h"
+//#include "du_s.h"
 
 int main(int argc, char **argv){
-    for(int i = 0; i < argc; i++){
+    char cwd[1024];
+	for(int i = 0; i < argc; i++){
         if (strcmp(argv[i],"--help") == 0){
             help();
             return 0;
         }
     }
-//    for
+	if (getcwd(cwd, sizeof(cwd)) != NULL){
+		filesreturn(cwd, 0, 0);	
+	} else {
+		perror("getcwd error");
+	}
 }
