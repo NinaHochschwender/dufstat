@@ -25,9 +25,13 @@
 #include <fcntl.h>
 #include <string.h>
 #include "du.h"
+void debugg(int debug){
+	if(debug == 1){
+		puts("test");
+	}
+}
 
-
-void readdirs(FILE *file, char * dir, short showHidden, short followSymlink){
+void readdirs(FILE *file, char * dir, short showHidden, short followSymlink, int debug){
     DIR *dp;
     struct dirent *ep;
     dp = opendir(dir);
@@ -43,44 +47,45 @@ void readdirs(FILE *file, char * dir, short showHidden, short followSymlink){
 					if (S_ISDIR( filestat.st_mode)){
 						if(strcmp(ep->d_name,"..") == 0){
 							
-						} else if((strcmp(ep->d_name,".") == 0 && strlen(ep->d_name) == 1)){
+						} else if(strcmp(ep->d_name,".") == 0 && strlen(ep->d_name) == 1){
 
-						}else{
-                		/*
-						if (strstr(ep->d_name, ".") == 0){
-							if(showHidden == 1){
-                    			readdirs(file, fulldir, showHidden, followSymlink);
-							}
-            	    	} else {
-            	        	readdirs(file, fulldir, showHidden, followSymlink);
-            	    	}
-						*/
-						readdirs(file, fulldir, showHidden, followSymlink);
-						printf("%s\n", ep->d_name);
-
-						 }
+						} else {
+							/*
+							if (strstr(ep->d_name, ".") == 0){
+								if(showHidden == 1){
+                    				readdirs(file, fulldir, showHidden, followSymlink);
+								}
+            	    		} else {
+            	    		}
+							*/
+							debugg(debug);
+            	        	readdirs(file, fulldir, showHidden, followSymlink,debug);
+						}
             		} else if ( S_ISREG( filestat.st_mode )){
-						/*
-            	    	if (strstr(ep->d_name, ".") == 0){
+            	    	/*
+						if (strstr(ep->d_name, ".") == 0){
 							if (showHidden == 1){
-            	    			fprintf(file,"%s;%li\n",fulldir,filestat.st_size);
+            	    			fprintf(file,"%s %li\n",fulldir,filestat.st_size);
 							}
             	    	} else {
-            	            fprintf(file,"%s;%li\n",fulldir,filestat.st_size);
             	    	}
 						*/
-						fprintf(file, "%s;%li\n", fulldir, filestat.st_size);
-						printf("%s;%li\n", fulldir,filestat.st_size);
+						debugg(debug);
+            	        fprintf(file,"%s;%li\n",fulldir,filestat.st_size);
             		}
 				}
         	}
 		}
         (void)closedir(dp);//close the directory
+		
 	}
+	free(fulldir);
 }
 
-void filesreturn(char * directory, short showHidden, short followSymlink){
+
+
+void filesreturn(char * directory, short showHidden, short followSymlink, int debug){
     FILE *f = fopen("/tmp/dufstat.tmp","w");//temp file to be gentle on memory
-    readdirs(f, directory, showHidden,followSymlink);//calling the recusive function
+    readdirs(f, directory, showHidden,followSymlink, debug);//calling the recusive function
     fclose(f);
 }
