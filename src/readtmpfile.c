@@ -8,7 +8,7 @@ int readFile(char **name, long *size, int debug, int *index, int lines){
 	char *str1 = (char*) malloc(10000);
 	char *str2 = (char*) malloc(80);
 	int c = 0;
-	for (int i = 0; i <= lines; i++){
+	for (int i = 0; i < lines; i++){
 		if (feof(f)){
 			puts("1");
 			break;
@@ -17,23 +17,23 @@ int readFile(char **name, long *size, int debug, int *index, int lines){
 			fclose(f);
 			free(str1);
 			free(str2);
-			return 1;
+			return 2;
 		}
 		//name[i] = (char*) malloc((strlen(str1) + 1) * sizeof(char));
 		if(name[i] == NULL){
 			fclose(f);
 			free(str1);
 			free(str2);
-			return 1;
+			return 0;
 		}
 		strcpy(name[i], str1);
-		printf("%s\t%s\n", str1,str2);
+		//printf("%s\t%s\n", str1,str2);
 		size[i] = atol(str2);	
 		c++;
 	}
     fclose(f);
 	index = &c;
-	printf("%i\t%i",lines,c);
+	//printf("%i\t%i",lines,c);
 	free(str1);
 	free(str2);
 	/*

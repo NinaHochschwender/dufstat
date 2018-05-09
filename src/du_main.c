@@ -20,11 +20,13 @@
 #include <string.h>
 #include <unistd.h>
 #include <errno.h>
+#include <fnmatch.h>
 #include "help.h"
 #include "du.h"
 #include "du_s.h"
 #include "readtmpfile.h"
 
+//todo check if it can be removed
 /*
 void freeingFiles(FileInformations *fi, int index){
 	for(int i = 0; i < index; i++){
@@ -37,32 +39,37 @@ void freeingFiles(FileInformations *fi, int index){
 */
 
 int main(int argc, char **argv){
-    char cwd[1024];
-    int summing = 0;
-    int debug = 0;
-    int index;
-    for(int i = 0; i < argc; i++){
-        if (strcmp(argv[i],"--help") == 0){
-            help();
-            return 0;
-        }
-        if (strcmp(argv[i], "-s") == 0 || strcmp(argv[i], "--summarize") == 0){
-            summing = 1;
-        }
-        if (strcmp(argv[i], "--debug") == 0){
-            debug = 1;
-        }
-        if (strcmp(argv[i], "perreiter") == 0){
-            printf("fuck off\n");
-            return 0;
-        }
-    }
-	if (getcwd(cwd, sizeof(cwd)) != NULL){
-		filesreturn(cwd, 0, 0,debug);	
+    char cwd[1024];//path
+    int summing = 0;//if the -s or --summarize flag is enabled
+    int debug = 0;//todo remove in the end
+    int index;//useless todo remove
+	//checking the userinput
+    if (argc > 1){
+		if (strncmp("-",argv[argc-1],1) != 0){
+			strcpy(cwd, argv[argc-1]);
+		} else {
+			if (getcwd(cwd, sizeof(cwd)) == NULL){
+       			exit(1);
+			}
+		}
+		for(int i = 0; i < argc; i++){
+        	if (strcmp(argv[i],"--help") == 0){
+            	help();
+            	return 0;
+        	}
+        	if (strcmp(argv[i], "-s") == 0 || strcmp(argv[i], "--summarize") == 0){
+            	summing = 1;
+        	}
+        	if (strcmp(argv[i], "--debug") == 0){
+            	debug = 1;
+        	}
+    	}
 	} else {
-		perror("getcwd error");
-        return 1;
+		if (getcwd(cwd, sizeof(cwd)) == NULL){
+				exit(1);
+		}
 	}
+	filesreturn(cwd,0,0,debug);
     //reading from the shell
     FILE *shell;
     int status;
@@ -81,16 +88,16 @@ int main(int argc, char **argv){
     if (status == -1){
         return 1;
     } else {
-		lines--;
-		char **name = malloc(lines * sizeof(char*));
-		long *sizes = malloc(lines * sizeof(long));
+		lines;
+		char **name = malloc((lines - 1) * sizeof(char*));
+		long *sizes = calloc(lines - 1,sizeof(long));
 		if (name == NULL || sizes == NULL){
 			puts("nooo");
 			exit(1);
 		}
 		
-		for (int i = 0; i <= lines; i++){
-			name[i] = malloc(1000);
+		for (int i = 0; i < lines; i++){
+			name[i] = calloc(1000,sizeof(char));
 			if(name[i] == NULL){
 				puts("nooo");
 				exit(1);
@@ -98,32 +105,32 @@ int main(int argc, char **argv){
 				strcpy(name[i],"in");
 			}
 		}
-		for(int i = 0; i <= lines; i++)
-			printf("%s\n",name[i]);	
-		if (readFile(name,sizes,debug,&index,lines) != 0){
-            for (int i = 0; i <= lines; i++){
-				if(name[i] != NULL)
+		int errs = readFile(name,sizes,debug,&index,lines);
+	    //printf("%i\n",errs);
+		if (errs != 0){
+            for (int i = 0; i < lines; i++){
+				//if(name[i] != NULL)
 					free(name[i]);
 			}
 			free(name);
 			free(sizes);
-			return 1;
+			exit(1);
     	}
     	if (summing == 1){
-    	    printf("%20s%li",".", sumoffiles(sizes, lines));
-			for (int i = 0; i <= lines; i++){
+    	    printf("%-20s%li\n",".", sumoffiles(sizes, lines));
+			for (int i = 0; i < lines; i++){
 				if(name[i] != NULL)
 					free(name[i]);
 			}
     	    free(name);
 			free(sizes);
-			return 0;
+			exit(0);
 	    } else {
-	        for (int i = 0; i <= lines;i++){
+	        for (int i = 0; i < lines;i++){
 				if(name[i] != NULL)
 	            	printf("%-40s %li\n",name[i], sizes[i]);
     	    }
-			for (int i = 0; i <= lines; i++){
+			for (int i = 0; i < lines; i++){
 				//if(name[i] != NULL)
 					free(name[i]);
 			}

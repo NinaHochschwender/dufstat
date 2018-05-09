@@ -23,7 +23,7 @@
 
 long sumoffiles(long *size, int index){
     long sizes;
-    for(int i = 0; i <= index; i++){
+    for(int i = 0; i < index; i++){
         sizes += size[i];
     }
     return sizes;
