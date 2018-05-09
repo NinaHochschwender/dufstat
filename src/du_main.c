@@ -25,12 +25,21 @@
 #include "du_s.h"
 #include "readtmpfile.h"
 
+/*
+void freeingFiles(FileInformations *fi, int index){
+	for(int i = 0; i < index; i++){
+		if(fi[i].name != NULL){
+			free(fi[i].name);
+		}
+	}
+	free(fi);
+}
+*/
+
 int main(int argc, char **argv){
     char cwd[1024];
     int summing = 0;
     int debug = 0;
-	char **files;
-    long *size;
     int index;
     for(int i = 0; i < argc; i++){
         if (strcmp(argv[i],"--help") == 0){
@@ -54,16 +63,73 @@ int main(int argc, char **argv){
 		perror("getcwd error");
         return 1;
 	}
-    if (readFile(&files,&size,debug,&index) != 0){
+    //reading from the shell
+    FILE *shell;
+    int status;
+    int lines;//num lines
+    char *tmp = (char*) malloc(80 * sizeof(char));
+    shell = popen("cat /tmp/dufstat.tmp | wc -l", "r");
+    if (shell == NULL){
         return 1;
     }
-    if (summing == 1){
-        printf("%20s%li",".", sumoffiles(size));
-        return 0;
+    while (fgets(tmp, 79, shell) != NULL){
+        lines = atoi(tmp);
+    }
+    printf("%i\n", lines);
+    free(tmp);
+    status = pclose(shell);
+    if (status == -1){
+        return 1;
     } else {
-        for (int i = 0; i <= index;i++){
-            printf("%-40s %li\n",files[i],size[i]);
-        }
-        return 1;
-    }
+		lines--;
+		char **name = malloc(lines * sizeof(char*));
+		long *sizes = malloc(lines * sizeof(long));
+		if (name == NULL || sizes == NULL){
+			puts("nooo");
+			exit(1);
+		}
+		
+		for (int i = 0; i <= lines; i++){
+			name[i] = malloc(1000);
+			if(name[i] == NULL){
+				puts("nooo");
+				exit(1);
+			} else {
+				strcpy(name[i],"in");
+			}
+		}
+		for(int i = 0; i <= lines; i++)
+			printf("%s\n",name[i]);	
+		if (readFile(name,sizes,debug,&index,lines) != 0){
+            for (int i = 0; i <= lines; i++){
+				if(name[i] != NULL)
+					free(name[i]);
+			}
+			free(name);
+			free(sizes);
+			return 1;
+    	}
+    	if (summing == 1){
+    	    printf("%20s%li",".", sumoffiles(sizes, lines));
+			for (int i = 0; i <= lines; i++){
+				if(name[i] != NULL)
+					free(name[i]);
+			}
+    	    free(name);
+			free(sizes);
+			return 0;
+	    } else {
+	        for (int i = 0; i <= lines;i++){
+				if(name[i] != NULL)
+	            	printf("%-40s %li\n",name[i], sizes[i]);
+    	    }
+			for (int i = 0; i <= lines; i++){
+				//if(name[i] != NULL)
+					free(name[i]);
+			}
+			free(name);
+			free(sizes);
+        	return 2;
+    	}
+	}
 }

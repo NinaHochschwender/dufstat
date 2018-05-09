@@ -71,7 +71,7 @@ void readdirs(FILE *file, char * dir, short showHidden, short followSymlink, int
             	    	}
 						*/
 						debugg(debug);
-            	        fprintf(file,"%s;%li\n",fulldir,filestat.st_size);
+            	        fprintf(file,"%s %li\n",fulldir,filestat.st_size);
             		}
 				}
         	}

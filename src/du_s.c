@@ -19,10 +19,11 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include <dirent.h>
+#include "readtmpfile.h"
 
-long sumoffiles(long * size){
+long sumoffiles(long *size, int index){
     long sizes;
-    for(int i = 0; i < (sizeof(size)/sizeof(long)); i++){
+    for(int i = 0; i <= index; i++){
         sizes += size[i];
     }
     return sizes;

@@ -17,5 +17,5 @@
  */
 #ifndef DU_S_H
 	#define DU_S_H
-	long sumoffiles(long * size);
+	long sumoffiles(long *size, int index);
 #endif
